@@ -1,6 +1,8 @@
 package com.starscape.objects;
 
+
 public class StarFactory {
+    
     // String constants for unique values
     public static final String SPECIAL = "Special";
     public static final String TYPE_M = "M";
@@ -14,6 +16,7 @@ public class StarFactory {
 
     public static final String CLASS_VI = "VI";
     public static final String CLASS_IV = "IV";
+    public static final String CLASS_V = "V";
     public static final String CLASS_III = "III";
     public static final String CLASS_II = "II";
     public static final String CLASS_IB = "Ib";
@@ -43,7 +46,8 @@ public class StarFactory {
         Star star = new Star();
         star.setStarName(determinePrimaryStarName());
         star.setComponent(determinePrimaryComponent());
-        star.setStarClass(determinePrimaryStarClass());
+        StarTypeBuilder fullStarType = determinePrimaryStarClass();
+        star.setStarClass(fullStarType.getFullStarType());
         star.setMass(determinePrimaryMass());
         star.setTemp(determinePrimaryTemp());
         star.setDiameter(determinePrimaryDiameter());
@@ -58,15 +62,38 @@ public class StarFactory {
     }
 
     private static String determinePrimaryStarName() {
+
         return null;
     }
 
-    private static String determinePrimaryComponent() {
+     private static String determinePrimaryComponent() {
         return "A";
     }
 
-    private static String determinePrimaryStarClass() {
-        return "G2V";
+    private static StarTypeBuilder determinePrimaryStarClass() {
+        String starType = Type[Dice.roll2D6() - 2];
+        String starClass = CLASS_V;
+
+        if( SPECIAL.equals(starType) ) {
+            int typeReroll = Dice.roll2D6() - 2;
+            if (typeReroll == 0) {
+                typeReroll = 1;
+            } else if (typeReroll == 10) {
+                typeReroll = 9;
+            }
+            starType = Type[typeReroll];
+            starClass = Special[Dice.roll2D6() - 2]; 
+            if(GIANTS.equals(starClass)) {
+                starClass = Giants[Dice.roll2D6() - 2];
+            } 
+        } else if(HOT.equals(starType)) {
+            starType = Hot[Dice.roll2D6() - 2]; 
+        } 
+
+
+        int subtypeNumber = Dice.roll1D10() - 1; // Subtype from 0 to 9
+
+        return new StarTypeBuilder(starType, starClass, subtypeNumber);
     }
 
     private static double determinePrimaryMass() {

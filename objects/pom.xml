@@ -11,6 +11,7 @@
     <packaging>jar</packaging>
     <name>objects</name>
     <dependencies>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
