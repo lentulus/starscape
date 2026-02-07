@@ -1,3 +1,4 @@
+    private Star parentStar;
 package com.starscape.objects;
 
 import jakarta.persistence.Entity;
@@ -20,10 +21,10 @@ public class Star {
     private double luminosity;
     private double orbitNum;
     private Double au; // may be null
-    private Double ecc; // may be null
+    private Double ecc; // may be null eccentricty
     private Double period; // may be null
-    private Double mao; // may be null
-    private Double hzco; // may be null
+    private Double mao; // may be null Minimum Allowable Orbit#
+    private Double hzco; // may be null the Habitable Zone Centre Orbit
 
     public Star() {}
 
@@ -67,4 +68,7 @@ public class Star {
 
     public Double getHzco() { return hzco; }
     public void setHzco(Double hzco) { this.hzco = hzco; }
+
+    public Star getParentStar() { return parentStar; }
+    public void setParentStar(Star parentStar) { this.parentStar = parentStar; }
 }

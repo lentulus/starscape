@@ -1,3 +1,7 @@
-com\starscape\objects\Star.class
-com\starscape\objects\StarFactory.class
 com\starscape\objects\Dice.class
+com\starscape\objects\StarFactory.class
+com\starscape\objects\StarTypeBuilder.class
+com\starscape\objects\TypeTableLookup.class
+com\starscape\objects\StarConstants.class
+com\starscape\objects\Star.class
+com\starscape\objects\TypeTableLookupResult.class

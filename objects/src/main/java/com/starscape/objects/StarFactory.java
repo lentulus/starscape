@@ -1,63 +1,50 @@
 package com.starscape.objects;
 
+public class PrimaryStarFactory {
 
-public class StarFactory {
-    
-    // String constants for unique values
-    public static final String SPECIAL = "Special";
-    public static final String TYPE_M = "M";
-    public static final String TYPE_G = "G";
-    public static final String TYPE_F = "F";
-    public static final String HOT = "Hot";
-
-    public static final String TYPE_A = "A";
-    public static final String TYPE_B = "B";
-    public static final String TYPE_O = "O";
-
-    public static final String CLASS_VI = "VI";
-    public static final String CLASS_IV = "IV";
-    public static final String CLASS_V = "V";
-    public static final String CLASS_III = "III";
-    public static final String CLASS_II = "II";
-    public static final String CLASS_IB = "Ib";
-    public static final String CLASS_IA = "Ia";
-    public static final String GIANTS = "Giants";
-    public static final String PECULIAR = "Peculiar";
-    public static final String TYPE_BD = "BD";
-    public static final String D = "D";
-    public static final String BLACK_HOLE = "Black Hole";
-    public static final String PULSAR = "Pulsar";
-    public static final String NEUTRON_STAR = "Neutron Star";
-    public static final String NEBULA = "Nebula";
-    public static final String PROTOSTAR = "Protostar";
-    public static final String STAR_CLUSTER = "Star Cluster";
-    public static final String ANOMALY = "Anomaly";
-    
-    // Arrays initialized with constants
-    
-    public static final String[] Type = {SPECIAL, TYPE_M, TYPE_M, TYPE_M, TYPE_M, TYPE_M, TYPE_M, TYPE_M, TYPE_G, TYPE_G, TYPE_F, HOT};
-    public static final String[] Hot = {TYPE_A, TYPE_A, TYPE_A, TYPE_A, TYPE_A, TYPE_A, TYPE_A, TYPE_A, TYPE_A, TYPE_B, TYPE_B, TYPE_O};
-    public static final String[] Special = {CLASS_VI, CLASS_IV, CLASS_VI, CLASS_VI, CLASS_IV, CLASS_IV, CLASS_IV, CLASS_IV, CLASS_III, CLASS_III, GIANTS, GIANTS};
-    public static final String[] Unusual = {PECULIAR, CLASS_VI, CLASS_IV, TYPE_BD, TYPE_BD, TYPE_BD, D, D, D, CLASS_III, GIANTS};
-    public static final String[] Giants = {CLASS_III, CLASS_III, CLASS_III, CLASS_III, CLASS_III, CLASS_III, CLASS_III, CLASS_II, CLASS_II, CLASS_IB,  CLASS_IA};
-    public static final String[] Peculiar = {BLACK_HOLE, PULSAR, NEUTRON_STAR, NEBULA, NEBULA, PROTOSTAR, PROTOSTAR, PROTOSTAR, STAR_CLUSTER, ANOMALY, ANOMALY};
-   
+    static TypeTableLookup seeker  = new TypeTableLookup();
     public static Star createPrimaryStar() {
         Star star = new Star();
+
+        // Tombstone needs more work here
         star.setStarName(determinePrimaryStarName());
         star.setComponent(determinePrimaryComponent());
-        StarTypeBuilder fullStarType = determinePrimaryStarClass();
+
+        StarTypeBuilder fullStarType = StarTypeBuilder.NULL_STAR_TYPE;
+        for (int i = 0; i < 100; i++) {
+           
+            fullStarType = determinePrimaryStarClass();
+            boolean isValid = seeker.isValidStarType(fullStarType);
+            if(isValid){
+                break;
+            }
+
+        }
+        if(fullStarType.equals(StarTypeBuilder.NULL_STAR_TYPE)) {
+            throw new IllegalStateException("Failed to determine a valid star type after 100 attempts");
+        }
+
+
+
         star.setStarClass(fullStarType.getFullStarType());
-        star.setMass(determinePrimaryMass());
-        star.setTemp(determinePrimaryTemp());
-        star.setDiameter(determinePrimaryDiameter());
-        star.setLuminosity(determinePrimaryLuminosity());
+
+        TypeTableLookupResult typeResult = seeker.lookup(fullStarType);
+        if(typeResult == null) {
+            throw new IllegalStateException("TypeTableLookup returned null for star type: " + fullStarType.getFullStarType());
+        }
+        
+        star.setMass(typeResult.getMass());
+        star.setTemp(typeResult.getTemperature());
+        star.setDiameter(typeResult.getDiameter());
+
+        star.setLuminosity(determinePrimaryLuminosity(typeResult.getDiameter(), typeResult.getTemperature()));
         star.setOrbitNum(determinePrimaryOrbitNum());
         star.setAu(determinePrimaryAu());
         star.setEcc(determinePrimaryEcc());
         star.setPeriod(determinePrimaryPeriod());
         star.setMao(determinePrimaryMao());
         star.setHzco(determinePrimaryHzco());
+        star.setParentStar(null); // primary stars have no parent
         return star;
     }
 
@@ -71,68 +58,59 @@ public class StarFactory {
     }
 
     private static StarTypeBuilder determinePrimaryStarClass() {
-        String starType = Type[Dice.roll2D6() - 2];
-        String starClass = CLASS_V;
+        String starType = StarConstants.Type[Dice.roll2D6() - 2];
+        String starClass = StarConstants.CLASS_V;
 
-        if( SPECIAL.equals(starType) ) {
+        if(StarConstants.SPECIAL.equals(starType)) {
             int typeReroll = Dice.roll2D6() - 2;
             if (typeReroll == 0) {
                 typeReroll = 1;
             } else if (typeReroll == 10) {
                 typeReroll = 9;
             }
-            starType = Type[typeReroll];
-            starClass = Special[Dice.roll2D6() - 2]; 
-            if(GIANTS.equals(starClass)) {
-                starClass = Giants[Dice.roll2D6() - 2];
-            } 
-        } else if(HOT.equals(starType)) {
-            starType = Hot[Dice.roll2D6() - 2]; 
-        } 
-
+            starType = StarConstants.Type[typeReroll];
+            starClass = StarConstants.Special[Dice.roll2D6() - 2];
+            if(StarConstants.GIANTS.equals(starClass)) {
+                starClass = StarConstants.Giants[Dice.roll2D6() - 2];
+            }
+        } else if(StarConstants.HOT.equals(starType)) {
+            starType = StarConstants.Hot[Dice.roll2D6() - 2];
+        }
 
         int subtypeNumber = Dice.roll1D10() - 1; // Subtype from 0 to 9
 
         return new StarTypeBuilder(starType, starClass, subtypeNumber);
     }
 
-    private static double determinePrimaryMass() {
-        return 1.0;
-    }
 
-    private static double determinePrimaryTemp() {
-        return 5778.0;
-    }
 
-    private static double determinePrimaryDiameter() {
-        return 1.0;
-    }
-
-    private static double determinePrimaryLuminosity() {
-        return 1.0;
+    private static double determinePrimaryLuminosity(double diameter, double temperature) {
+        // Simple Stefan–Boltzmann-inspired proportional estimate.
+        double tempSols = temperature / 5778.0; // Sun's effective temperature in K 
+        return Math.pow(diameter, 2) * Math.pow(tempSols, 4);
     }
 
     private static double determinePrimaryOrbitNum() {
-        return 1.0;
+        return 0; // primary is always 0
     }
 
     private static Double determinePrimaryAu() {
-        return 1.0;
+        return null;
     }
 
     private static Double determinePrimaryEcc() {
-        return 0.0;
+        return null;
     }
 
     private static Double determinePrimaryPeriod() {
-        return 365.25;
+        return null;
     }
 
     private static Double determinePrimaryMao() {
-        return 0.0;
+        return null;
     }
 
     private static Double determinePrimaryHzco() {
-        return 1.0;
+        return null; // the Habitable Zone Centre Orbit
     }
 }
