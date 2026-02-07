@@ -1,5 +1,6 @@
 com\starscape\objects\Dice.class
 com\starscape\objects\StarFactory.class
+com\starscape\objects\PrimaryStarFactory.class
 com\starscape\objects\StarTypeBuilder.class
 com\starscape\objects\TypeTableLookup.class
 com\starscape\objects\StarConstants.class

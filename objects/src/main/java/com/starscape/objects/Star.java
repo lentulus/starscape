@@ -1,4 +1,3 @@
-    private Star parentStar;
 package com.starscape.objects;
 
 import jakarta.persistence.Entity;
@@ -25,6 +24,7 @@ public class Star {
     private Double period; // may be null
     private Double mao; // may be null Minimum Allowable Orbit#
     private Double hzco; // may be null the Habitable Zone Centre Orbit
+    private Star parentStar; // may be null for primary stars
 
     public Star() {}
 
