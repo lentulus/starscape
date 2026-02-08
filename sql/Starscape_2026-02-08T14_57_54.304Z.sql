@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `descriptions` (
 	`descripton_id` INT NOT NULL AUTO_INCREMENT UNIQUE,
 	`content` VARCHAR(255) NOT NULL,
 	PRIMARY KEY(`descripton_id`)
-) COMMENT='Useful text';
+) 
 
 
 CREATE TABLE IF NOT EXISTS `belts` (
@@ -172,73 +172,3 @@ CREATE TABLE IF NOT EXISTS `exotic_atmosphere_subtypes` (
 	PRIMARY KEY(`exotic_atmosphere_subtype_id`)
 );
 
-
-ALTER TABLE `taints`
-ADD FOREIGN KEY(`taint_persistance_id`) REFERENCES `taint_pesistances`(`taint_persistance_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `taints`
-ADD FOREIGN KEY(`taint_severity_id`) REFERENCES `taint_severities`(`taint_severity_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `taints`
-ADD FOREIGN KEY(`taint_subtype_id`) REFERENCES `taint_subtypes`(`taint_subtype_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `stars`
-ADD FOREIGN KEY(`parent_star_id`) REFERENCES `stars`(`star_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `systems`
-ADD FOREIGN KEY(`primary_star_id`) REFERENCES `stars`(`star_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `stars`
-ADD FOREIGN KEY(`orbit_paramers_id`) REFERENCES `orbit_parameters`(`orbit_parameter_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `body_or_belt`
-ADD FOREIGN KEY(`orbits_star_id`) REFERENCES `stars`(`star_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `body_or_belt`
-ADD FOREIGN KEY(`orbit_parameters_id`) REFERENCES `orbit_parameters`(`orbit_parameter_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `moon_or_ring`
-ADD FOREIGN KEY(`orbits_planet_id`) REFERENCES `body_or_belt`(`body_or_belt_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `moon_or_ring`
-ADD FOREIGN KEY(`orbit_parameters_id`) REFERENCES `orbit_parameters`(`orbit_parameter_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `rocky_objects`
-ADD FOREIGN KEY(`is_body_or_belt_id`) REFERENCES `body_or_belt`(`body_or_belt_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `rocky_objects`
-ADD FOREIGN KEY(`is_moon_id`) REFERENCES `moon_or_ring`(`moon_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `rocky_objects`
-ADD FOREIGN KEY(`composit_description_id`) REFERENCES `descriptions`(`descripton_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `belts`
-ADD FOREIGN KEY(`is_body_or_belt_id`) REFERENCES `body_or_belt`(`body_or_belt_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `belt_signficant_bodies`
-ADD FOREIGN KEY(`belt_id`) REFERENCES `belts`(`belt_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `belt_signficant_bodies`
-ADD FOREIGN KEY(`rocky_object_id`) REFERENCES `rocky_objects`(`rockey_objects_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `rocky_objects`
-ADD FOREIGN KEY(`is_belt_significant_body_id`) REFERENCES `belt_signficant_bodies`(`signficant_body_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `rings`
-ADD FOREIGN KEY(`moon_id`) REFERENCES `moon_or_ring`(`moon_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `atmospheres`
-ADD FOREIGN KEY(`armosphere_description_id`) REFERENCES `descriptions`(`descripton_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `taints`
-ADD FOREIGN KEY(`atmosphere_id`) REFERENCES `atmospheres`(`atmosphere_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `exotic_atmospheres`
-ADD FOREIGN KEY(`atmosphere_id`) REFERENCES `atmospheres`(`atmosphere_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `exotic_atmospheres`
-ADD FOREIGN KEY(`exotic_atmosphere_subtypes_id`) REFERENCES `exotic_atmosphere_subtypes`(`exotic_atmosphere_subtype_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
-ALTER TABLE `atmospheres`
-ADD FOREIGN KEY(`rocky_object_id`) REFERENCES `rocky_objects`(`rockey_objects_id`)
-ON UPDATE NO ACTION ON DELETE NO ACTION;
