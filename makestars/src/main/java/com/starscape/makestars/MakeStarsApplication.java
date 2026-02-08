@@ -1,5 +1,5 @@
 package com.starscape.makestars;
-import dataobjects.DatabaseUtil;
+import com.starscape.dataobjects.DatabaseUtil;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,7 +18,7 @@ public class MakeStarsApplication {
             // Connect to H2 database using DatabaseUtil and print status
             try {
                 Class.forName("org.h2.Driver");
-                java.sql.Connection conn = dataobjects.DatabaseUtil.getConnection();
+                java.sql.Connection conn = DatabaseUtil.getConnection();
                 System.out.println("H2 database connection successful: " + conn.getMetaData().getURL());
                 conn.close();
             } catch (Exception e) {

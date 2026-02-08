@@ -1,4 +1,5 @@
 package dataobjects;
+import com.starscape.dataobjects.DatabaseUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;
