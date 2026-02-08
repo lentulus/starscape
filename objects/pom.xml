@@ -11,6 +11,11 @@
     <packaging>jar</packaging>
     <name>objects</name>
     <dependencies>
+                <dependency>
+                    <groupId>com.h2database</groupId>
+                    <artifactId>h2</artifactId>
+                    <scope>runtime</scope>
+                </dependency>
          <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -23,13 +28,7 @@
         </dependency>
     </dependencies>
 
-    <repositories>
-        <repository>
-            <id>objectdb</id>
-            <name>ObjectDB Repository</name>
-            <url>https://m2.objectdb.com</url>
-        </repository>
-    </repositories>
+    <!-- No external repositories needed -->
     <build>
         <plugins>
             <plugin>
